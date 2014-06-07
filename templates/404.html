@@ -1,0 +1,13 @@
+{% extends "template.html" %}
+
+{% block title %}WLokalu: page not found{% endblock %}
+
+{% block body %}
+
+<h1>Page <tt>{{ request.META.PATH_INFO }}</tt> not found</h1>
+
+<p class="error">
+  Requested page <tt>{{ request.META.PATH_INFO }}</tt> was not found.
+</p>
+
+{% endblock %}
