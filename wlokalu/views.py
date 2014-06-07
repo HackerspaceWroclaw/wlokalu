@@ -11,7 +11,8 @@ from models import Person
 #-----------------------------------------------------------------------------
 
 def person_enter(nick):
-  Person(nick).save()
+  if Person.objects.filter(nick = nick).count() == 0:
+    Person(nick).save() # add if not exists
 
 def person_leave(nick):
   Person(nick).delete()
