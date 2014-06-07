@@ -18,19 +18,24 @@
         </tr>
       </thead>
       <tbody>
-{% for person in present %}
+{% if present %}
+{%   for person in present %}
         <tr>
           <td class="nick">{{ person.nick }}</td>
           <td class="time"><i>n/a</i></td>
           <td>
             <form method="post" action="{{ form_target }}">
               <input type="hidden" name="nick" value="{{ person.nick }}" />
-              <input type="submit" class="leave_button_small"
-                name="leave" value="wyszedł" />
+              <input type="submit" name="leave" value="wyszedł" />
             </form>
           </td>
         </tr>
-{% endfor %}
+{%   endfor %}
+{% else %}
+        <tr>
+          <td class="nick" colspan="3"><i>nikogo nie ma</i></td>
+        </tr>
+{% endif %}
       </tbody>
     </table>
 
