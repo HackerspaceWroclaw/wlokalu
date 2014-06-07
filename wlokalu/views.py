@@ -2,6 +2,8 @@
 
 from django.http import HttpResponse
 from django.template import RequestContext, loader
+from django.views.decorators.csrf import csrf_exempt
+
 from wlokalu.logging import getLogger, message as log
 
 from models import Person
@@ -19,6 +21,7 @@ def list_people():
 
 #-----------------------------------------------------------------------------
 
+@csrf_exempt
 def list(request, nick = None):
   template = loader.get_template("list.html")
 
