@@ -41,3 +41,36 @@ pre {
   font-size: small;
   padding: 1em;
 }
+
+/*--------------------------------------------------------------------------*/
+
+input[type=submit], input[type=button] {
+  border: 1px solid #999a9c;
+  background: #bfc2c6;
+}
+input[type=text], textarea {
+  border: 1px solid #999a9c;
+  background: #eee;
+}
+
+/*--------------------------------------------------------------------------*/
+
+form div.presence {
+  width: 210px;
+}
+form div.presence p {
+  text-align: center;
+}
+input.enter_button {
+  background: #ff0000;
+}
+input.leave_button {
+  background: #00ff00;
+}
+input.enter_button, input.leave_button {
+  width: 100px;
+  height: 35px;
+}
+input.nick {
+  width: 99.5%;
+}

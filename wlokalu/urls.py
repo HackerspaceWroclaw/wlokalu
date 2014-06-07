@@ -7,6 +7,7 @@ from django.conf import settings
 
 urlpatterns = patterns('wlokalu.views',
   (r'^hello/?$', 'hello_world'),
+  (r'^$', 'list'),
 )
 
 #-----------------------------------------------------------------------------

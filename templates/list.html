@@ -1,0 +1,32 @@
+{% extends "template.html" %}
+
+{% block title %}WLokalu: Lista użytkowników{% endblock %}
+
+{% block body %}
+
+<h1>Lista użytkowników</h1>
+
+<p>
+<b>TODO</b>
+</p>
+
+{% if msg %}
+<pre>
+{{ msg }}
+</pre>
+{% endif %}
+
+<form method="post" action="{% url wlokalu.views.list %}">
+  {% csrf_token %}
+  <div class="presence">
+    <p>
+      {{ form.nick }}
+    </p>
+    <p>
+      <input type="submit" class="enter_button" name="enter" value="Jestem" />
+      <input type="submit" class="leave_button" name="leave" value="Wychodzę" />
+    </p>
+  </div>
+</form>
+
+{% endblock %}
