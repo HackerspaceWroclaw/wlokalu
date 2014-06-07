@@ -6,27 +6,41 @@
 
 <h1>Lista użytkowników</h1>
 
-<p>
-<b>TODO</b>
-</p>
+<table class="report_layout"><tr>
+  <td class="report_layout">
 
-{% if msg %}
-<pre>
-{{ msg }}
-</pre>
-{% endif %}
+    <table class="list">
+      <thead>
+        <tr><th class="nick">nick</td><th class="time">obecny(a) od</th></tr>
+      </thead>
+      <tbody>
+{% for person in present %}
+        <tr>
+          <td class="nick">{{ person.nick }}</td>
+          <td class="time"><i>n/a</i></td>
+        </tr>
+{% endfor %}
+      </tbody>
+    </table>
 
-<form method="post" action="{{ form_target }}">
-  {% csrf_token %}
-  <div class="presence">
-    <p>
-      {{ form.nick }}
-    </p>
-    <p>
-      <input type="submit" class="enter_button" name="enter" value="Jestem" />
-      <input type="submit" class="leave_button" name="leave" value="Wychodzę" />
-    </p>
-  </div>
-</form>
+  </td><td class="report_layout">
+
+    <form method="post" action="{{ form_target }}">
+      {% csrf_token %}
+      <div class="presence">
+        <div>
+          {{ form.nick }}
+        </div>
+        <div style="margin-top: 1em">
+          <input type="submit" class="enter_button"
+            name="enter" value="Jestem" />
+          <input type="submit" class="leave_button"
+            name="leave" value="Wychodzę" />
+        </div>
+      </div>
+    </form>
+
+  </td>
+</tr></table>
 
 {% endblock %}

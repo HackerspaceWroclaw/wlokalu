@@ -44,6 +44,28 @@ pre {
 
 /*--------------------------------------------------------------------------*/
 
+table.report_layout, td.report_layout {
+  vertical-align: top;
+}
+td.report_layout {
+  padding: 1em;
+}
+
+th.nick, th.time {
+  border: dotted black 1px;
+  background: #eeeeec;
+}
+th.nick {
+  width: 100px;
+}
+table.list {
+  border: dotted black 1px;
+  font-size: small;
+  padding: 0.2em;
+}
+
+/*--------------------------------------------------------------------------*/
+
 input[type=submit], input[type=button] {
   border: 1px solid #999a9c;
   background: #bfc2c6;
@@ -72,5 +94,5 @@ input.enter_button, input.leave_button {
   height: 35px;
 }
 input.nick {
-  width: 99.5%;
+  width: 203px;
 }

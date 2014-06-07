@@ -4,6 +4,19 @@ from django.http import HttpResponse
 from django.template import RequestContext, loader
 from wlokalu.logging import getLogger, message as log
 
+from models import Person
+
+#-----------------------------------------------------------------------------
+
+def person_enter(nick):
+  Person(nick).save()
+
+def person_leave(nick):
+  Person(nick).delete()
+
+def list_people():
+  return Person.objects.all().order_by('nick')
+
 #-----------------------------------------------------------------------------
 
 def list(request, nick = None):
@@ -20,16 +33,14 @@ def list(request, nick = None):
 
   if request.POST.get('nick', '') != '':
     if 'enter' in request.POST:
-      msg = "%s enters HS" % (request.POST['nick'])
+      person_enter(request.POST['nick'])
     else: # 'leave' in request.POST
-      msg = "%s leaves HS" % (request.POST['nick'])
-  else:
-    msg = None
+      person_leave(request.POST['nick'])
 
   context = RequestContext(request, {
     'form_target': form_target,
     'form': form,
-    'msg': msg,
+    'present': list_people(),
   })
   return HttpResponse(template.render(context))
 
