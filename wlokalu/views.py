@@ -4,9 +4,12 @@ from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.views.decorators.csrf import csrf_exempt
 
-from wlokalu.logging import getLogger, message as log
-
 from models import Person
+
+#-----------------------------------------------------------------------------
+
+from wlokalu.logging import getLogger, message as log
+logger = getLogger(__name__)
 
 #-----------------------------------------------------------------------------
 
@@ -37,8 +40,22 @@ def list(request, nick = None):
 
   if request.POST.get('nick', '') != '':
     if 'enter' in request.POST:
+      logger.info(log(
+        'person entered premises',
+        nick = request.POST['nick'],
+        address = request.META['REMOTE_ADDR'],
+        uri = request.META['REQUEST_URI'],
+        post = dict(request.POST),
+      ))
       person_enter(request.POST['nick'])
     else: # 'leave' in request.POST
+      logger.info(log(
+        'person left premises',
+        nick = request.POST['nick'],
+        address = request.META['REMOTE_ADDR'],
+        uri = request.META['REQUEST_URI'],
+        post = dict(request.POST),
+      ))
       person_leave(request.POST['nick'])
 
   context = RequestContext(request, {
