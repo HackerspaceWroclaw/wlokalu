@@ -55,8 +55,14 @@ th.nick, th.time {
   border: dotted black 1px;
   background: #eeeeec;
 }
-th.nick {
+.nick {
   width: 100px;
+}
+td.time {
+  width: 120px;
+}
+th.time {
+  width: 210px;
 }
 table.list {
   border: dotted black 1px;

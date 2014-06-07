@@ -13,8 +13,7 @@
       <thead>
         <tr>
           <th class="nick">nick</th>
-          <th class="time">obecny(a) od</th>
-          <th></th>
+          <th class="time" colspan="2">obecny(a) od</th>
         </tr>
       </thead>
       <tbody>
@@ -26,7 +25,8 @@
           <td>
             <form method="post" action="{{ form_target }}">
               <input type="hidden" name="nick" value="{{ person.nick }}" />
-              <input type="submit" name="leave" value="wyszedł" />
+              <input type="submit" name="leave" value="wyszedł"
+                style="width: 80px"/>
             </form>
           </td>
         </tr>
