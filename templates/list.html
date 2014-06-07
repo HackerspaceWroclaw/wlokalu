@@ -16,7 +16,7 @@
 </pre>
 {% endif %}
 
-<form method="post" action="{% url wlokalu.views.list %}">
+<form method="post" action="{{ form_target }}">
   {% csrf_token %}
   <div class="presence">
     <p>

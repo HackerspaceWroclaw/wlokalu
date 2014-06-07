@@ -6,11 +6,17 @@ from wlokalu.logging import getLogger, message as log
 
 #-----------------------------------------------------------------------------
 
-def list(request):
+def list(request, nick = None):
   template = loader.get_template("list.html")
 
+  from django.core.urlresolvers import reverse
   from forms import PresenceForm
   form = PresenceForm()
+  if nick is not None:
+    form.initial['nick'] = nick
+    form_target = reverse(list, kwargs = {'nick': nick})
+  else:
+    form_target = reverse(list)
 
   if request.POST.get('nick', '') != '':
     if 'enter' in request.POST:
@@ -21,6 +27,7 @@ def list(request):
     msg = None
 
   context = RequestContext(request, {
+    'form_target': form_target,
     'form': form,
     'msg': msg,
   })
