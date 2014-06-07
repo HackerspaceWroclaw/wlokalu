@@ -21,7 +21,7 @@
 {%   for person in present %}
         <tr>
           <td class="nick">{{ person.nick }}</td>
-          <td class="time"><i>n/a</i></td>
+          <td class="time">{{ person.since|date:"Y/m/d H:i T" }}</td>
           <td>
             <form method="post" action="{{ form_target }}">
               <input type="hidden" name="nick" value="{{ person.nick }}" />

@@ -59,10 +59,10 @@ th.nick, th.time {
   width: 100px;
 }
 td.time {
-  width: 120px;
+  width: 160px;
 }
 th.time {
-  width: 210px;
+  width: 240px;
 }
 table.list {
   border: dotted black 1px;
