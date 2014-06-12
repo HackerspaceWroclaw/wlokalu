@@ -3,6 +3,7 @@
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.views.decorators.csrf import csrf_exempt
+import django.shortcuts
 
 from models import Person
 
@@ -57,6 +58,8 @@ def list(request, nick = None):
         post = dict(request.POST),
       ))
       person_leave(request.POST['nick'])
+    # tell the browser to reload the page, but with GET request
+    return django.shortcuts.redirect(request.path)
 
   context = RequestContext(request, {
     'form_target': form_target,
