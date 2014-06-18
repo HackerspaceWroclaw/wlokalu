@@ -76,11 +76,4 @@ def list(request, nick = None):
   return HttpResponse(template.render(context))
 
 #-----------------------------------------------------------------------------
-
-def hello_world(request):
-  template = loader.get_template("hello_world.html")
-  context = RequestContext(request, {})
-  return HttpResponse(template.render(context))
-
-#-----------------------------------------------------------------------------
 # vim:ft=python:foldmethod=marker
