@@ -17,9 +17,16 @@ logger = getLogger(__name__)
 def person_enter(nick):
   if Person.objects.filter(nick = nick).count() == 0:
     Person(nick).save() # add if not exists
+    return True
+  return False
 
 def person_leave(nick):
-  Person(nick).delete()
+  people = Person.objects.filter(nick = nick)
+  if people.count() == 0:
+    return False
+  else:
+    people.delete()
+    return True
 
 def list_people():
   return Person.objects.all().order_by('nick')
@@ -41,23 +48,23 @@ def list(request, nick = None):
 
   if request.POST.get('nick', '') != '':
     if 'enter' in request.POST:
-      logger.info(log(
-        'person entered premises',
-        nick = request.POST['nick'],
-        address = request.META['REMOTE_ADDR'],
-        uri = request.META['REQUEST_URI'],
-        post = dict(request.POST),
-      ))
-      person_enter(request.POST['nick'])
+      if person_enter(request.POST['nick']):
+        logger.info(log(
+          'person entered premises',
+          nick = request.POST['nick'],
+          address = request.META['REMOTE_ADDR'],
+          uri = request.META['REQUEST_URI'],
+          post = dict(request.POST),
+        ))
     else: # 'leave' in request.POST
-      logger.info(log(
-        'person left premises',
-        nick = request.POST['nick'],
-        address = request.META['REMOTE_ADDR'],
-        uri = request.META['REQUEST_URI'],
-        post = dict(request.POST),
-      ))
-      person_leave(request.POST['nick'])
+      if person_leave(request.POST['nick']):
+        logger.info(log(
+          'person left premises',
+          nick = request.POST['nick'],
+          address = request.META['REMOTE_ADDR'],
+          uri = request.META['REQUEST_URI'],
+          post = dict(request.POST),
+        ))
     # tell the browser to reload the page, but with GET request
     return django.shortcuts.redirect(request.path)
 
