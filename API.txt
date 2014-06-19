@@ -4,6 +4,7 @@ DELETE http://wlokalu.hswro.org/api/v1/person/<nick>
   Person <nick> entered or left premises. PUT can be also replaced with POST
   (just for convenience, as normally POST should carry some content).
 
+
 GET http://wlokalu.hswro.org/api/v1/person
   ["<nick>", ...]
 GET http://wlokalu.hswro.org/api/v1/person/<nick>
@@ -15,7 +16,7 @@ GET http://wlokalu.hswro.org/api/v1/person/<nick>
 
 
 POST   http://wlokalu.hswro.org/api/v1/sensor/<id>
-  {"name": "<name>", "state": "<state>"}
+  {"state": "<state>"}
 
   Sensor <id> is in state <state>. (simple sensor)
 
