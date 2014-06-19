@@ -38,6 +38,26 @@
 {% endif %}
       </tbody>
     </table>
+{% if sensors %}
+    <table class="list">
+      <thead>
+        <tr>
+          <th class="sensor">czujnik</th>
+          <th class="state">stan</th>
+          <th class="sensor_time">ostatnia zmiana</th>
+        </tr>
+      </thead>
+      <tbody>
+{%   for sensor in sensors %}
+        <tr>
+          <td class="sensor">{{ sensor.sensor_id }}</td>
+          <td class="state">{{ sensor.state }}</td>
+          <td class="sensor_time">{{ sensor.since|date:"Y/m/d H:i T" }}</td>
+        </tr>
+{%   endfor %}
+      </tbody>
+    </table>
+{% endif %}
 
   </td><td class="report_layout">
 

@@ -59,15 +59,28 @@ th.nick, th.time {
   width: 100px;
 }
 td.time {
-  width: 160px;
+  width: 180px;
 }
 th.time {
-  width: 240px;
+  width: 260px;
 }
+
+th.sensor, th.state, th.sensor_time {
+  border: dotted black 1px;
+  background: #eeeeec;
+}
+.sensor, .state {
+  width: 100px;
+}
+.sensor_time {
+  width: 156px; /* XXX: carefully selected based on th.time */
+}
+
 table.list {
   border: dotted black 1px;
   font-size: small;
   padding: 0.2em;
+  margin-bottom: 0.8em;
 }
 
 /*--------------------------------------------------------------------------*/
