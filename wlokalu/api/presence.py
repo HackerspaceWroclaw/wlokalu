@@ -45,8 +45,31 @@ def sensor_state(sensor_id, state, context = None):
   else:
     return simple_sensor_update(sensor_id, state, context)
 
+def simple_sensor(sensor_id):
+  sensors = SimpleSensor.objects.filter(sensor_id = sensor_id)
+  if sensors.count() == 0:
+    return None
+  else:
+    return sensors[0]
+
 def list_simple_sensors():
   return SimpleSensor.objects.all().order_by('sensor_id')
+
+def complex_sensor(sensor_id):
+  sensors = \
+    ComplexSensor.objects.filter(sensor_id__startswith = "%s/" % (sensor_id,))
+  if sensors.count() == 0:
+    return None
+  else:
+    return sensors
+
+def complex_sensor_field(sensor_id, sensor_subid):
+  name = "%s/%s" % (sensor_id, sensor_subid)
+  sensors = ComplexSensor.objects.filter(sensor_id = name)
+  if sensors.count() == 0:
+    return None
+  else:
+    return sensors[0]
 
 def list_complex_sensors():
   sensors = {}

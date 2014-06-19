@@ -4,6 +4,15 @@ DELETE http://wlokalu.hswro.org/api/v1/person/<nick>
   Person <nick> entered or left premises. PUT can be also replaced with POST
   (just for convenience, as normally POST should carry some content).
 
+GET http://wlokalu.hswro.org/api/v1/person
+  ["<nick>", ...]
+GET http://wlokalu.hswro.org/api/v1/person/<nick>
+  {"present": true, "since": 1234567890, "nick": "<nick>"}
+  {"present": false, "since": null, "nick": "<nick>"}
+
+  List presence of people.
+  NOTE: "since" value for absent person might change to a number.
+
 
 POST   http://wlokalu.hswro.org/api/v1/sensor/<id>
   {"name": "<name>", "state": "<state>"}
@@ -20,6 +29,31 @@ POST   http://wlokalu.hswro.org/api/v1/sensor/<id>
 DELETE http://wlokalu.hswro.org/api/v1/sensor/<id>
 
   Delete sensor <id> altogether.
+
+
+GET http://wlokalu.hswro.org/api/v1/sensor
+GET http://wlokalu.hswro.org/api/v1/sensor?simple
+GET http://wlokalu.hswro.org/api/v1/sensor?complex
+  ["<id>", ...]
+
+  List known sensors, both simple and complex, just simple or just complex.
+
+
+GET http://wlokalu.hswro.org/api/v1/sensor/<id>
+  {"state": "<state>", "since": 1234567890, "sensor_id": "<id>"}
+  ["<subid>", ...]
+  {"state": null, "since": null, "sensor_id": "<id>"}
+
+  List sensor's state (simple sensor) or sensor's fields (complex sensor).
+  Unknown sensors are reported with "state" set to null.
+
+
+GET http://wlokalu.hswro.org/api/v1/sensor/<id>/<subid>
+  {"present": true, "since": 1234567890, "sensor_id": "<id>", "field": "<subid>"}
+  {"present": false, "since": null, "sensor_id": "<id>", "field": "<subid>"}
+
+  List state of a field in complex sensor.
+  NOTE: "since" value for absent field might change to a number.
 
 
 TODO:
