@@ -3,7 +3,7 @@
 from wlokalu.logging import getLogger, message
 logger = getLogger('wlokalu.presence')
 
-from models import Person, Sensor, ListSensor
+from models import Person, SimpleSensor, ComplexSensor
 
 #-----------------------------------------------------------------------------
 
@@ -41,17 +41,17 @@ def list_people():
 
 def sensor_state(sensor_id, state, context = None):
   if isinstance(state, (list, tuple)):
-    return sensor_sync_states(sensor_id, state, context)
+    return complex_sensor_update(sensor_id, state, context)
   else:
-    return sensor_update_state(sensor_id, state, context)
+    return simple_sensor_update(sensor_id, state, context)
 
-def list_sensors():
-  return Sensor.objects.all().order_by('sensor_id')
+def list_simple_sensors():
+  return SimpleSensor.objects.all().order_by('sensor_id')
 
-def list_list_sensors():
+def list_complex_sensors():
   sensors = {}
   order = []
-  for s in ListSensor.objects.all().order_by('sensor_id'):
+  for s in ComplexSensor.objects.all().order_by('sensor_id'):
     entry = {
       'name': s.subname,
       'since': s.since,
@@ -64,9 +64,9 @@ def list_list_sensors():
   return [sensors[s] for s in order]
 
 def delete_sensor(sensor_id, context = None):
-  sensors = Sensor.objects.filter(sensor_id = sensor_id)
+  sensors = SimpleSensor.objects.filter(sensor_id = sensor_id)
   list_sensors = \
-    ListSensor.objects.filter(sensor_id__startswith = "%s/" % (sensor_id,))
+    ComplexSensor.objects.filter(sensor_id__startswith = "%s/" % (sensor_id,))
   if sensors.count() > 0 or list_sensors.count() > 0:
     sensors.delete()
     list_sensors.delete()
@@ -74,10 +74,10 @@ def delete_sensor(sensor_id, context = None):
 
 #-----------------------------------------------------------------------------
 
-def sensor_sync_states(sensor_id, states, context = None):
+def complex_sensor_update(sensor_id, states, context = None):
   sensors = \
-    ListSensor.objects.filter(sensor_id__startswith = "%s/" % (sensor_id,)) \
-                      .order_by('sensor_id')
+    ComplexSensor.objects.filter(sensor_id__startswith = "%s/" % (sensor_id,)) \
+                         .order_by('sensor_id')
   existing = set([s.subname for s in sensors])
   incoming = set(states)
   states = sorted(states)
@@ -86,7 +86,7 @@ def sensor_sync_states(sensor_id, states, context = None):
   for s in states:
     if s not in existing:
       added.append(s)
-      ListSensor('%s/%s' % (sensor_id, s)).save()
+      ComplexSensor('%s/%s' % (sensor_id, s)).save()
 
   deleted = []
   for s in sensors:
@@ -103,12 +103,12 @@ def sensor_sync_states(sensor_id, states, context = None):
     logger.info(log('updated sensor', sensor = sensor_id, update = update,
                     context = context))
 
-def sensor_update_state(sensor_id, state, context = None):
-  sensors = Sensor.objects.filter(sensor_id = sensor_id)
+def simple_sensor_update(sensor_id, state, context = None):
+  sensors = SimpleSensor.objects.filter(sensor_id = sensor_id)
   if sensors.count() > 0:
     sensor = sensors[0]
   else:
-    sensor = Sensor(sensor_id = sensor_id)
+    sensor = SimpleSensor(sensor_id = sensor_id)
   if sensor.state != state:
     sensor.state = state
     sensor.save()

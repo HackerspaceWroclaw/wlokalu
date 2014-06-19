@@ -43,8 +43,8 @@ def list(request, nick = None):
     'form_target': form_target,
     'form': form,
     'present': presence.list_people(),
-    'sensors': presence.list_sensors(),
-    'list_sensors': presence.list_list_sensors(),
+    'sensors': presence.list_simple_sensors(),
+    'complex_sensors': presence.list_complex_sensors(),
   })
   return HttpResponse(template.render(context))
 

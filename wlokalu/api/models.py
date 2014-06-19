@@ -10,7 +10,7 @@ class Person(models.Model):
 
 #-----------------------------------------------------------------------------
 
-class Sensor(models.Model):
+class SimpleSensor(models.Model):
   sensor_id = models.CharField(max_length = 256, primary_key = True)
   state = models.CharField(max_length = 256)
   since = models.DateTimeField(auto_now_add = True)
@@ -26,7 +26,7 @@ class Sensor(models.Model):
 #   models.ListSensor.objects.filter(sensor_id__startswith = 'xxx/')
 #   models.ListSensor.objects.filter(sensor_id__endswith = '/yyy')
 
-class ListSensor(models.Model):
+class ComplexSensor(models.Model):
   # sensor_id is an artificial key composed of name and subname
   sensor_id = models.CharField(max_length = 512, primary_key = True)
   since = models.DateTimeField(auto_now_add = True)

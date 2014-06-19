@@ -8,13 +8,13 @@ DELETE http://wlokalu.hswro.org/api/v1/person/<nick>
 POST   http://wlokalu.hswro.org/api/v1/sensor/<id>
   {"name": "<name>", "state": "<state>"}
 
-  Sensor <id> is in state <state>.
+  Sensor <id> is in state <state>. (simple sensor)
 
 
 POST   http://wlokalu.hswro.org/api/v1/sensor/<id>
   {"state": ["<subid>", ...]}
 
-  Sensor <id> has following entries: <subid>, ...
+  Sensor <id> has following entries: <subid>, ... (complex sensor)
 
 
 DELETE http://wlokalu.hswro.org/api/v1/sensor/<id>
