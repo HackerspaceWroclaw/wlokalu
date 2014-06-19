@@ -124,6 +124,7 @@ INSTALLED_APPS = (
   # Uncomment the next line to enable admin documentation:
   # 'django.contrib.admindocs',
   'wlokalu',
+  'wlokalu.api',
 )
 
 LOGIN_URL = '/login'

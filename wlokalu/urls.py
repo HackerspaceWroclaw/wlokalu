@@ -8,6 +8,7 @@ from django.conf import settings
 urlpatterns = patterns('wlokalu.views',
   (r'^$', 'list'),
   (r'^nick/(?P<nick>[^/]+)$', 'list'),
+  (r'^api/v1/', include('wlokalu.api.v1.urls')),
 )
 
 #-----------------------------------------------------------------------------

@@ -5,31 +5,12 @@ from django.template import RequestContext, loader
 from django.views.decorators.csrf import csrf_exempt
 import django.shortcuts
 
-from models import Person
+from wlokalu.api import presence
 
 #-----------------------------------------------------------------------------
 
 from wlokalu.logging import getLogger, message as log
 logger = getLogger(__name__)
-
-#-----------------------------------------------------------------------------
-
-def person_enter(nick):
-  if Person.objects.filter(nick = nick).count() == 0:
-    Person(nick).save() # add if not exists
-    return True
-  return False
-
-def person_leave(nick):
-  people = Person.objects.filter(nick = nick)
-  if people.count() == 0:
-    return False
-  else:
-    people.delete()
-    return True
-
-def list_people():
-  return Person.objects.all().order_by('nick')
 
 #-----------------------------------------------------------------------------
 
@@ -47,31 +28,21 @@ def list(request, nick = None):
     form_target = reverse(list)
 
   if request.POST.get('nick', '') != '':
+    context = {
+      'address': request.META['REMOTE_ADDR'],
+      'uri': request.META['REQUEST_URI'],
+    }
     if 'enter' in request.POST:
-      if person_enter(request.POST['nick']):
-        logger.info(log(
-          'person entered premises',
-          nick = request.POST['nick'],
-          address = request.META['REMOTE_ADDR'],
-          uri = request.META['REQUEST_URI'],
-          post = dict(request.POST),
-        ))
+      presence.person_entered(nick, context)
     else: # 'leave' in request.POST
-      if person_leave(request.POST['nick']):
-        logger.info(log(
-          'person left premises',
-          nick = request.POST['nick'],
-          address = request.META['REMOTE_ADDR'],
-          uri = request.META['REQUEST_URI'],
-          post = dict(request.POST),
-        ))
+      presence.person_left(nick, context)
     # tell the browser to reload the page, but with GET request
     return django.shortcuts.redirect(request.path)
 
   context = RequestContext(request, {
     'form_target': form_target,
     'form': form,
-    'present': list_people(),
+    'present': presence.list_people(),
   })
   return HttpResponse(template.render(context))
 
