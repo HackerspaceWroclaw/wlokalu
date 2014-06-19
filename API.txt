@@ -19,3 +19,7 @@ POST   http://wlokalu.hswro.org/api/v1/sensor/<id>
 DELETE http://wlokalu.hswro.org/api/v1/sensor/<id>
 
   Delete sensor <id> altogether.
+
+
+TODO:
+  * history (over specific range)

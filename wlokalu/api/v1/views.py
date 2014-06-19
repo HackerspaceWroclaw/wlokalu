@@ -29,7 +29,7 @@ def person(request, nick):
     else:
       reply = {"status": "not found"}
   else:
-    return HttpResponse(status = 405)
+    return HttpResponse(status = 405) # method not allowed
 
   return HttpResponse(json.dumps(reply) + "\n", content_type = "text/json")
 
@@ -41,15 +41,25 @@ def sensor(request, sensor_id):
   }
 
   if request.method == "POST":
-    reply = {"status": "TODO"}
+    try:
+      if hasattr(request, 'body'): # Django 1.4+
+        payload = json.loads(request.body)
+      else: # Django <1.4
+        payload = json.loads(request.raw_post_data)
+      sensor_state = payload['state']
+    except:
+      return HttpResponse(status = 400) # bad request
+    presence.sensor_state(sensor_id, sensor_state, context)
+    reply = {"status": "ok"}
   elif request.method == "DELETE":
-    reply = {"status": "TODO"}
+    presence.delete_sensor(sensor_id, context)
+    reply = {"status": "ok"}
   elif request.method == "GET":
     reply = {"status": "TODO"}
   else:
-    return HttpResponse(status = 405)
+    return HttpResponse(status = 405) # method not allowed
 
-  return HttpResponse(reply, content_type = "text/json")
+  return HttpResponse(json.dumps(reply) + "\n", content_type = "text/json")
 
 #-----------------------------------------------------------------------------
 # vim:ft=python:foldmethod=marker

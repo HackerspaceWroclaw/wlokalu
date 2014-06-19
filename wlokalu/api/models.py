@@ -12,7 +12,6 @@ class Person(models.Model):
 
 class Sensor(models.Model):
   sensor_id = models.CharField(max_length = 256, primary_key = True)
-  name = models.CharField(max_length = 256)
   state = models.CharField(max_length = 256)
   since = models.DateTimeField(auto_now_add = True)
 

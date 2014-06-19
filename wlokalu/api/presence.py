@@ -48,13 +48,31 @@ def sensor_state(sensor_id, state, context = None):
 def list_sensors():
   return [] # TODO
 
+def delete_sensor(sensor_id, context = None):
+  sensors = Sensor.objects.filter(sensor_id = sensor_id)
+  lspfx = "%s:" % (sensor_id,)
+  list_sensors = ListSensor.objects.filter(sensor_id__startswith = lspfx)
+  if sensors.count() > 0 or list_sensors.count() > 0:
+    sensors.delete()
+    list_sensors.delete()
+    logger.info(log('deleted sensor', sensor = sensor_id, context = context))
+
 #-----------------------------------------------------------------------------
 
 def sensor_sync_states(sensor_id, states, context = None):
   pass # TODO
 
 def sensor_update_state(sensor_id, state, context = None):
-  pass # TODO
+  sensors = Sensor.objects.filter(sensor_id = sensor_id)
+  if sensors.count() > 0:
+    sensor = sensors[0]
+  else:
+    sensor = Sensor(sensor_id = sensor_id)
+  if sensor.state != state:
+    sensor.state = state
+    sensor.save()
+    logger.info(log('updated sensor', sensor = sensor_id, state = state,
+                    context = context))
 
 #-----------------------------------------------------------------------------
 # vim:ft=python:foldmethod=marker
