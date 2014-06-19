@@ -7,13 +7,13 @@ DELETE http://wlokalu.hswro.org/api/v1/person/<nick>
 POST   http://wlokalu.hswro.org/api/v1/sensor/<id>
   {"name": "<name>", "state": "<state>"}
 
-  Sensor <id> is in state <state>. Sensor should be displayed as <name>.
+  Sensor <id> is in state <state>.
 
 
 POST   http://wlokalu.hswro.org/api/v1/sensor/<id>
-  {"name": "<name>", "state": ["<subid>", ...]}
+  {"state": ["<subid>", ...]}
 
-  Sensor <id> (displayed as <name>) has following entries: <subid>, ...
+  Sensor <id> has following entries: <subid>, ...
 
 
 DELETE http://wlokalu.hswro.org/api/v1/sensor/<id>
