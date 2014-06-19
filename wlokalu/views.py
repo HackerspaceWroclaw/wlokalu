@@ -33,9 +33,9 @@ def list(request, nick = None):
       'uri': request.META['REQUEST_URI'],
     }
     if 'enter' in request.POST:
-      presence.person_entered(nick, context)
+      presence.person_entered(request.POST['nick'], context)
     else: # 'leave' in request.POST
-      presence.person_left(nick, context)
+      presence.person_left(request.POST['nick'], context)
     # tell the browser to reload the page, but with GET request
     return django.shortcuts.redirect(request.path)
 
