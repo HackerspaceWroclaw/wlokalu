@@ -16,7 +16,7 @@ def person(request, nick):
     'uri': request.META['REQUEST_URI'],
   }
 
-  if request.method == "PUT":
+  if request.method == "PUT" or request.method == "POST":
     presence.person_entered(nick, context)
     reply = {"status": "ok"}
   elif request.method == "DELETE":
