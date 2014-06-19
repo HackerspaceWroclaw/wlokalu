@@ -46,7 +46,22 @@ def sensor_state(sensor_id, state, context = None):
     return sensor_update_state(sensor_id, state, context)
 
 def list_sensors():
-  return [] # TODO
+  return Sensor.objects.all().order_by('sensor_id')
+
+def list_list_sensors():
+  sensors = {}
+  order = []
+  for s in ListSensor.objects.all().order_by('sensor_id'):
+    entry = {
+      'name': s.subname,
+      'since': s.since,
+    }
+    if s.name not in sensors:
+      sensors[s.name] = { 'name': s.name, 'entries': [entry] }
+      order.append(s.name)
+    else:
+      sensors[s.name]['entries'].append(entry)
+  return [sensors[s] for s in order]
 
 def delete_sensor(sensor_id, context = None):
   sensors = Sensor.objects.filter(sensor_id = sensor_id)
