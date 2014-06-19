@@ -50,8 +50,8 @@ def list_sensors():
 
 def delete_sensor(sensor_id, context = None):
   sensors = Sensor.objects.filter(sensor_id = sensor_id)
-  lspfx = "%s:" % (sensor_id,)
-  list_sensors = ListSensor.objects.filter(sensor_id__startswith = lspfx)
+  list_sensors = \
+    ListSensor.objects.filter(sensor_id__startswith = "%s:" % (sensor_id,))
   if sensors.count() > 0 or list_sensors.count() > 0:
     sensors.delete()
     list_sensors.delete()
@@ -60,7 +60,33 @@ def delete_sensor(sensor_id, context = None):
 #-----------------------------------------------------------------------------
 
 def sensor_sync_states(sensor_id, states, context = None):
-  pass # TODO
+  sensors = \
+    ListSensor.objects.filter(sensor_id__startswith = "%s:" % (sensor_id,)) \
+                      .order_by('sensor_id')
+  existing = set([s.subname for s in sensors])
+  incoming = set(states)
+  states = sorted(states)
+
+  added = []
+  for s in states:
+    if s not in existing:
+      added.append(s)
+      ListSensor('%s:%s' % (sensor_id, s)).save()
+
+  deleted = []
+  for s in sensors:
+    if s.subname not in incoming:
+      deleted.append(s.subname)
+      s.delete()
+
+  if len(added) + len(deleted) > 0:
+    update = {
+      'all': states,
+      'added': added,
+      'deleted': deleted,
+    }
+    logger.info(log('updated sensor', sensor = sensor_id, update = update,
+                    context = context))
 
 def sensor_update_state(sensor_id, state, context = None):
   sensors = Sensor.objects.filter(sensor_id = sensor_id)
