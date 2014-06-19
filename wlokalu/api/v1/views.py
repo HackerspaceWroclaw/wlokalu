@@ -14,7 +14,19 @@ logger = getLogger(__name__)
 
 #-----------------------------------------------------------------------------
 
+def return_json(function):
+  def replacement(*args, **kwargs):
+    reply = function(*args, **kwargs)
+    if type(reply) in (dict, list, str, unicode):
+      return HttpResponse(json.dumps(reply) + "\n", content_type = "text/json")
+    return reply
+
+  return replacement
+
+#-----------------------------------------------------------------------------
+
 @csrf_exempt
+@return_json
 def person(request, nick):
   context = {
     'address': request.META['REMOTE_ADDR'],
@@ -23,22 +35,23 @@ def person(request, nick):
 
   if request.method == "PUT" or request.method == "POST":
     presence.person_entered(nick, context)
-    reply = {"status": "ok"}
-  elif request.method == "DELETE":
+    return {"status": "ok"}
+
+  if request.method == "DELETE":
     presence.person_left(nick, context)
-    reply = {"status": "ok"}
-  elif request.method == "GET":
+    return {"status": "ok"}
+
+  if request.method == "GET":
     person = presence.person(nick)
     if person:
-      reply = {"status": "ok", "since": person.since}
+      return {"status": "ok", "since": person.since}
     else:
-      reply = {"status": "not found"}
-  else:
-    return HttpResponse(status = 405) # method not allowed
+      return {"status": "not found"}
 
-  return HttpResponse(json.dumps(reply) + "\n", content_type = "text/json")
+  return HttpResponse(status = 405) # method not allowed
 
 @csrf_exempt
+@return_json
 def sensor(request, sensor_id):
   context = {
     'address': request.META['REMOTE_ADDR'],
@@ -56,16 +69,16 @@ def sensor(request, sensor_id):
       logger.warn(log('bad request', exception = str(e), **context))
       return HttpResponse(status = 400) # bad request
     presence.sensor_state(sensor_id, sensor_state, context)
-    reply = {"status": "ok"}
-  elif request.method == "DELETE":
-    presence.delete_sensor(sensor_id, context)
-    reply = {"status": "ok"}
-  elif request.method == "GET":
-    reply = {"status": "TODO"}
-  else:
-    return HttpResponse(status = 405) # method not allowed
+    return {"status": "ok"}
 
-  return HttpResponse(json.dumps(reply) + "\n", content_type = "text/json")
+  if request.method == "DELETE":
+    presence.delete_sensor(sensor_id, context)
+    return {"status": "ok"}
+
+  if request.method == "GET":
+    return {"status": "TODO"}
+
+  return HttpResponse(status = 405) # method not allowed
 
 #-----------------------------------------------------------------------------
 # vim:ft=python:foldmethod=marker
