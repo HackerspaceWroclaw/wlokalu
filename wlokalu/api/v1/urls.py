@@ -6,7 +6,7 @@ from django.conf import settings
 #-----------------------------------------------------------------------------
 
 urlpatterns = patterns('wlokalu.api.v1.views',
-  (r'^person/(?P<nick>[^/]+)$', 'person'),
+  (r'^person/(?P<nick>.+)$', 'person'),
   (r'^sensor/(?P<sensor_id>[^/]+)$', 'sensor'),
 )
 
