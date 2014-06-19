@@ -34,7 +34,7 @@ class ListSensor(models.Model):
 
   @property
   def name(self):
-    return self.sensor_id.split(':', 2)[0]
+    return self.sensor_id.split(':', 1)[0]
 
   @name.setter
   def name(self, new_name):
@@ -42,7 +42,7 @@ class ListSensor(models.Model):
 
   @property
   def subname(self):
-    return self.sensor_id.split(':', 2)[1]
+    return self.sensor_id.split(':', 1)[1]
 
   @subname.setter
   def subname(self, new_subname):
