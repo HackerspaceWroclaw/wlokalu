@@ -2,11 +2,48 @@
 #
 # An example of how to submit data about simple sensor.
 #
+#-----------------------------------------------------------------------------
 
 import sys
 import httplib
 import urlparse
 import json
+
+#-----------------------------------------------------------------------------
+
+class WLokalu:
+  def __init__(self, url):
+    urlp = urlparse.urlparse(url)
+    self.host = urlp.hostname
+    self.port = urlp.port
+    self.app_path = urlp.path.rstrip('/')
+
+  def request(self, method, path, body = None):
+    h = httplib.HTTPConnection(host = self.host, port = self.port)
+    if body is not None:
+      h.request(method, path, json.dumps(body))
+    else:
+      h.request(method, path)
+
+    resp = h.getresponse()
+    if resp.status / 100 == 2:
+      return json.loads(resp.read())
+    else:
+      raise Exception('HTTP error %d' % (resp.status,))
+
+  def get(self, sensor):
+    path = '%s/api/v1/sensor/%s' % (self.app_path, sensor)
+    return self.request('GET', path)
+
+  def put(self, sensor, state):
+    path = '%s/api/v1/sensor/%s' % (self.app_path, sensor)
+    return self.request('POST', path, {"state": state})
+
+  def delete(self, sensor):
+    path = '%s/api/v1/sensor/%s' % (self.app_path, sensor)
+    return self.request('DELETE', path)
+
+#-----------------------------------------------------------------------------
 
 if len(sys.argv) < 3 or sys.argv[1] in ('-h', '--help'):
   print "Usage:"
@@ -15,28 +52,16 @@ if len(sys.argv) < 3 or sys.argv[1] in ('-h', '--help'):
   sys.exit()
 
 if len(sys.argv) == 3:
-  url = urlparse.urlparse(sys.argv[1])
+  url = sys.argv[1]
   sensor = sys.argv[2]
   state = None
 else:
-  url = urlparse.urlparse(sys.argv[1])
+  url = sys.argv[1]
   sensor = sys.argv[2]
   state = sys.argv[3]
 
-h = httplib.HTTPConnection(host = url.hostname, port = url.port)
-if url.path.endswith('/'):
-  path = '%sapi/v1/sensor/%s' % (url.path, sensor)
+wlokalu = WLokalu(url)
+if state is not None:
+  wlokalu.put(sensor, state)
 else:
-  path = '%s/api/v1/sensor/%s' % (url.path, sensor)
-
-if state is None:
-  h.request('DELETE', path)
-else:
-  h.request('POST', path, json.dumps({"state": state}))
-
-resp = h.getresponse()
-if resp.status / 100 == 2:
-  print "OK"
-  print resp.read().strip()
-else:
-  print "failed"
+  wlokalu.delete(sensor)
