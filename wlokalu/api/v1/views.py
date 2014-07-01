@@ -33,6 +33,12 @@ def list_elements(request, subpages):
 #-----------------------------------------------------------------------------
 
 @csrf_exempt
+def error_404(request):
+  return HttpResponse(status = 404, content = '')
+
+#-----------------------------------------------------------------------------
+
+@csrf_exempt
 @return_json
 def person(request, nick):
   context = {

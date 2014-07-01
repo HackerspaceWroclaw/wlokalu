@@ -12,6 +12,7 @@ urlpatterns = patterns('wlokalu.api.v1.views',
   (r'^sensor/?$', 'list_sensors'),
   (r'^sensor/(?P<sensor_id>[^/]+)/?$', 'sensor'),
   (r'^sensor/(?P<sensor_id>[^/]+)/(?P<sensor_subid>.+)$', 'list_complex_sensor'),
+  (r'^.*', 'error_404'),
 )
 
 #-----------------------------------------------------------------------------
