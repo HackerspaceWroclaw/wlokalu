@@ -27,6 +27,13 @@ def return_json(function):
 
 @csrf_exempt
 @return_json
+def list_elements(request, subpages):
+  return subpages
+
+#-----------------------------------------------------------------------------
+
+@csrf_exempt
+@return_json
 def person(request, nick):
   context = {
     'address': request.META['REMOTE_ADDR'],
