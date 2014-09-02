@@ -4,6 +4,7 @@ from wlokalu.logging import getLogger, message
 logger = getLogger('wlokalu.presence')
 
 from models import Person, SimpleSensor, ComplexSensor
+import datetime
 
 #-----------------------------------------------------------------------------
 
@@ -130,6 +131,7 @@ def simple_sensor_update(sensor_id, state, context = None):
   sensors = SimpleSensor.objects.filter(sensor_id = sensor_id)
   if sensors.count() > 0:
     sensor = sensors[0]
+    sensor.since = datetime.datetime.now() # will be discarded if unused
   else:
     sensor = SimpleSensor(sensor_id = sensor_id)
   if sensor.state != state:
