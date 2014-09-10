@@ -15,11 +15,10 @@ local argv = {...}
 -- If not enough args, print help
 if #argv < 2 then
     print("Usage: <request-type> <address> [data] [debug|quiet|normal]")
-    print('Address: Without "http://"')
-    print("  Ex. GET foo.bar.buz.com/api/v1/add_user")
-    print("  Ex. POST wobble.wibble.org/api.php debug")
-    print("  Ex. POST wobble.wibble.org/api.php key=abcd&data=Foo%20Bar quiet")
-    print("  Ex. POST wobble.wibble.org/api.php debug normal")
+    print("  Ex. GET http://foo.bar.buz.com/api/v1/add_user")
+    print("  Ex. POST http://wobble.wibble.org/api.php debug")
+    print("  Ex. POST http://wobble.wibble.org/api.php key=abcd&data=Foo%20Bar quiet")
+    print("  Ex. POST http://wobble.wibble.org/api.php debug normal")
     print("  Example above sends 'debug' as data. If 'normal' would not be specified, it would print debug output instead.")
     return 1
 end
@@ -46,7 +45,7 @@ function getPath(addr)
 end
 
 -- Parse arguments
-local address = tostring(argv[2])
+local address = tostring(argv[2]):gsub("http://", "")
 local host    = address:sub(1, (address:find("/") or #address + 1) - 1)
 local path    = getPath(address)
 local request = tostring(argv[1])
