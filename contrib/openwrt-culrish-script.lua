@@ -3,32 +3,28 @@
 --[[
     Curl-ish script for OpenWRT written in lua.
     Uses "nixio" library - POSIX sockets for lua.
-    
+
     Copyleft, written by Lucy for HS:Wro
 ]]--
-
-require "nixio"
 
 -- Arguments
 local argv = {...}
 
 -- If not enough args, print help
 if #argv < 2 then
-    print("Usage: <request-type> <address> [data] [debug|quiet|normal]")
-    print("  Ex. GET http://foo.bar.buz.com/api/v1/add_user")
-    print("  Ex. POST http://wobble.wibble.org/api.php debug")
-    print("  Ex. POST http://wobble.wibble.org/api.php key=abcd&data=Foo%20Bar quiet")
-    print("  Ex. POST http://wobble.wibble.org/api.php debug normal")
-    print("  Example above sends 'debug' as data. If 'normal' would not be specified, it would print debug output instead.")
+    print("Usage: curl.lua <method> <address> [data] [debug|quiet|normal]")
+    print("Examples of use:")
+    print("  curl.lua GET http://foo.example.com/api/v1/add_user")
+    print("  curl.lua POST http://wobble.wibble.org/api.php debug")
+    print("  curl.lua POST http://wobble.wibble.org/api.php key=abcd&data=Foo%20Bar quiet")
+    print("  curl.lua POST http://wobble.wibble.org/api.php debug normal")
+    print("The last example sends 'debug' as data. If 'normal' would not be specified,\nthe script would print debug output instead.")
     return 1
 end
 
--- Local API
-
---- Add string to buffer
-function s(buffer, x)
-    buffer = buffer .. x .. "\r\n"
-end
+------------------------------------------------------------------------------
+-- Local helper functions
+------------------------------------------------------------------------------
 
 --- Check if var is one of modes
 function isMode(var)
@@ -38,22 +34,68 @@ function isMode(var)
     return false
 end
 
---- Get path from string
-function getPath(addr)
-    local x = addr:find("/")
-    return (x == nil and "/" or addr:sub(x, #addr))
+--- Split URL into four fragments
+function splitURL(url)
+    local proto, target, path = url:match('^(%a+)://([%w.:-]+)(.*)$')
+    if proto == nil then
+        return nil
+    end
+
+    local host, port = target:match('^([%w.-]+):(%d+)$')
+    if host == nil then
+        host = target
+        port = 80
+    end
+
+    if path == "" then
+        path = "/"
+    end
+
+    return proto, host, port, path
 end
 
--- Parse arguments
-local address = tostring(argv[2]):gsub("http://", "")
-local host    = address:sub(1, (address:find("/") or #address + 1) - 1)
-local path    = getPath(address)
-local request = tostring(argv[1])
-local data    = tostring(argv[3] or "")
-local mode    = tostring(argv[4] or "")
+-- Prepare HTTP request, with headers, body and all the good stuff
+function httpRequest(method, path, headers, content)
+    if headers == nil then
+        headers = {}
+    end
 
--- Start buffer
-local buffer  = ""
+    request = method .. " " .. path .. " HTTP/1.1\r\n"
+    for name, value in pairs(headers) do
+        request = request .. name .. ": " .. value .. "\r\n"
+    end
+
+    if content == nil or content == "" then
+        request = request .. "\r\n"
+    else
+        request = request .. "Content-Length: " .. content:len() .. "\r\n\r\n"
+        request = request .. content
+    end
+
+    return request
+end
+
+function nixioSend(host, port, data)
+    -- OpenWrt-specific library
+    require "nixio"
+
+    local socket = nixio.connect(host, port)
+    socket:write(data)
+    response = socket:read(1024)
+    socket:close()
+
+    return response
+end
+
+------------------------------------------------------------------------------
+-- Script's body
+------------------------------------------------------------------------------
+
+-- Parse arguments
+local proto, host, port, path = splitURL(argv[2])
+local method = tostring(argv[1])
+local data   = tostring(argv[3] or "")
+local mode   = tostring(argv[4] or "")
 
 -- If there is no mode specified, and data is mode, replace data with mode
 if mode == "" and isMode(data) then
@@ -61,41 +103,25 @@ if mode == "" and isMode(data) then
     data = ""
 end
 
--- Add stuff to buffer
-s(buffer, request.." "..path.." HTTP/1.1")
-s(buffer, "User-Agent: luaTool/1.0")
-s(buffer, "Host: "..host)
-s(buffer, "Accept: */*")
+-- Prepare request to send
+local headers = {
+    ["User-Agent"] = "luaTool/1.0",
+    ["Host"] = host,
+    ["Content-Type"] = "application/x-www-form-urlencoded",
+}
+local request = httpRequest(method, path, headers, data)
 
--- If there is data to be sent, add data-specific stuff
-if data ~= "" then
-    s(buffer, "Content-Type: application/x-www-form-urlencoded")
-    s(buffer, "Content-Length: "..#data)
-end
-
--- Trailing empty line
-s("")
-
--- Add data (if there is any)
-if data ~= "" then
-    s(data)
-    s("")
-end
-
--- Connect and send
-local socket = nixio.connect(host, 80)
-socket:write(buffer)
-
--- Debug
 if mode == "debug" then
-    print(buffer)
+    print(request)
 end
 
--- If not quiet, print response
+response = nixioSend(host, port, request)
+
 if mode ~= "quiet" then
-    print(socket:read(1024))
+    print(response)
 end
 
--- Disconnect, close
-socket:close()
 return 0
+
+------------------------------------------------------------------------------
+-- vim:ft=lua
