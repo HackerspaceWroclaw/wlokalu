@@ -43,7 +43,7 @@ def error_404(request):
 def person(request, nick):
   context = {
     'address': request.META['REMOTE_ADDR'],
-    'uri': request.META['REQUEST_URI'],
+    'uri': request.get_full_path(),
   }
 
   if request.method == "PUT" or request.method == "POST":
@@ -64,7 +64,7 @@ def person(request, nick):
 def sensor(request, sensor_id):
   context = {
     'address': request.META['REMOTE_ADDR'],
-    'uri': request.META['REQUEST_URI'],
+    'uri': request.get_full_path(),
   }
 
   if request.method == "POST":

@@ -30,7 +30,7 @@ def list(request, nick = None):
   if request.POST.get('nick', '') != '':
     context = {
       'address': request.META['REMOTE_ADDR'],
-      'uri': request.META['REQUEST_URI'],
+      'uri': request.get_full_path(),
     }
     if 'enter' in request.POST:
       presence.person_entered(request.POST['nick'], context)
