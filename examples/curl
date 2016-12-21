@@ -1,0 +1,10 @@
+The general way to update a sensor state using curl is:
+curl --request POST 'http://<hostname>/api/v1/sensor/<sensor_name>' --data '{"state": <value>}'
+where:
+<hostname> is the host running web service,
+<sensor_name> is the name of sensor that will be displayed on page,
+<value> is the current value.
+
+Example on router in crontab:
+*/5 * * * * /usr/bin/curl –request POST 'http://<hostname>/api/v1/sensor/Wi-Fi' –data '{„state”: '`iw dev wlan0 station dump | grep Station | wc -l`'}' > /dev/null 2>&1
+Please remember to enable cron (OpenWRT: /etc/init.d/cron enable && /etc/init.d/cron start) 
