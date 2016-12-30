@@ -1,81 +1,90 @@
 {% extends "template.html" %}
 
-{% block title %}WLokalu: Lista użytkowników{% endblock %}
+{% block title %}W Lokalu: Lista użytkowników{% endblock %}
 
 {% block body %}
 
 <h1>Lista użytkowników</h1>
 
-<table class="report_layout"><tr>
-  <td class="report_layout">
+<div class="row">
 
-    <table class="list">
+  <div class="col-md-7">
+
+    <table class="table table-striped table-bordered">
       <thead>
         <tr>
-          <th class="nick">nick</th>
-          <th class="time" colspan="2">obecny(a) od</th>
+          <th>Nick</th>
+          <th colspan="2">Od</th>
         </tr>
       </thead>
       <tbody>
-{% if present %}
-{%   for person in present %}
+  {% if present %}
+  {%   for person in present %}
         <tr>
-          <td class="nick">{{ person.nick }}</td>
-          <td class="time">{{ person.since|date:"Y/m/d H:i T" }}</td>
+          <td>{{ person.nick }}</td>
+          <td>{{ person.since|date:"Y/m/d H:i T" }}</td>
           <td>
             <form method="post" action="{{ form_target }}">
               <input type="hidden" name="nick" value="{{ person.nick }}" />
-              <input type="submit" name="leave" value="wyszedł"
-                style="width: 80px"/>
+              <button type="submit" name="leave" value="Wyszedł" class="btn btn-xs btn-link">Wyszedł</button>
             </form>
           </td>
         </tr>
-{%   endfor %}
-{% else %}
+  {%   endfor %}
+  {% else %}
         <tr>
-          <td class="nick" colspan="3"><i>nikogo nie ma</i></td>
+          <td colspan="3"><i>Nikogo nie ma!</i></td>
         </tr>
-{% endif %}
+  {% endif %}
       </tbody>
     </table>
-{% if sensors %}
-    <table class="list">
+
+  {% if sensors %}
+    <table class="table table-striped table-bordered">
       <thead>
         <tr>
-          <th class="sensor">czujnik</th>
-          <th class="state">stan</th>
-          <th class="sensor_time">ostatnia zmiana</th>
+          <th>Czujnik</th>
+          <th>Stan</th>
+          <th>Ostatnia zmiana</th>
         </tr>
       </thead>
       <tbody>
-{%   for sensor in sensors %}
+  {%   for sensor in sensors %}
         <tr>
-          <td class="sensor">{{ sensor.sensor_id }}</td>
-          <td class="state">{{ sensor.state }}</td>
-          <td class="sensor_time">{{ sensor.since|date:"Y/m/d H:i T" }}</td>
+          <td>{{ sensor.sensor_id }}</td>
+          <td>{{ sensor.state }}</td>
+          <td>{{ sensor.since|date:"Y/m/d H:i T" }}</td>
         </tr>
-{%   endfor %}
+  {%   endfor %}
       </tbody>
     </table>
-{% endif %}
+  {% endif %}
 
-  </td><td class="report_layout">
+  </div>
 
-    <form method="post" action="{{ form_target }}">
-      <div class="presence">
-        <div>
+  <div class="col-md-5">
+
+    <form class="form-inline" method="post" action="{{ form_target }}">
+
+      <div class="form-group">
+
+        <div class="input-group input-group">
+          <span class="input-group-addon">@</span>
+          <label class="sr-only" for="id_nick">Nick</label>
           {{ form.nick }}
         </div>
-        <div style="margin-top: 1em">
-          <input type="submit" class="enter_button"
-            name="enter" value="Jestem" />
-          <input type="submit" class="leave_button"
-            name="leave" value="Wychodzę" />
-        </div>
+
       </div>
+
+      <div class="btn-group">
+        <button type="submit" class="btn btn-success" name="enter" value="">Jestem</button>
+        <button type="submit" class="btn btn-danger" name="leave" value="">Wychodzę</button>
+      </div>
+
     </form>
 
-  </td>
-</tr></table>
+  </div>
+
+</div>
 
 {% endblock %}

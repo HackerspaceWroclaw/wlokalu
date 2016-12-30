@@ -8,7 +8,7 @@ from django import forms
 class PresenceForm(forms.Form):
   nick = forms.CharField(
     label = "nick",
-    widget = forms.TextInput(attrs = {'class': 'nick'}),
+    widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Nick'}),
   )
 
 #-----------------------------------------------------------------------------
