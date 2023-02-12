@@ -4,7 +4,7 @@ import logging
 import logging.config
 from django.conf import settings
 
-from json_message import message
+from .json_message import message
 
 #-----------------------------------------------------------------------------
 # dictConfig() {{{
@@ -14,7 +14,7 @@ if hasattr(logging.config, 'dictConfig'):
   dictConfig = logging.config.dictConfig
 else:
   # older, use local copy of dictConfig()
-  import logging_config
+  from . import logging_config
   dictConfig = logging_config.dictConfig
 
 # }}}

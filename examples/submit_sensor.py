@@ -5,21 +5,21 @@
 #-----------------------------------------------------------------------------
 
 import sys
-import httplib
-import urlparse
+import http.client
+import urllib.parse
 import json
 
 #-----------------------------------------------------------------------------
 
 class WLokalu:
   def __init__(self, url):
-    urlp = urlparse.urlparse(url)
+    urlp = urllib.parse.urlparse(url)
     self.host = urlp.hostname
     self.port = urlp.port
     self.app_path = urlp.path.rstrip('/')
 
   def request(self, method, path, body = None):
-    h = httplib.HTTPConnection(host = self.host, port = self.port)
+    h = http.client.HTTPConnection(host = self.host, port = self.port)
     if body is not None:
       h.request(method, path, json.dumps(body))
     else:
@@ -46,9 +46,9 @@ class WLokalu:
 #-----------------------------------------------------------------------------
 
 if len(sys.argv) < 3 or sys.argv[1] in ('-h', '--help'):
-  print "Usage:"
-  print "  %s http://wlokalu.hswro.org/ sensor-name state" % (sys.argv[0])
-  print "  %s http://wlokalu.hswro.org/ sensor-name" % (sys.argv[0])
+  print("Usage:")
+  print("  %s http://wlokalu.hswro.org/ sensor-name state" % (sys.argv[0]))
+  print("  %s http://wlokalu.hswro.org/ sensor-name" % (sys.argv[0]))
   sys.exit()
 
 if len(sys.argv) == 3:

@@ -19,7 +19,7 @@ def list(request, nick = None):
   template = loader.get_template("list.html")
 
   from django.core.urlresolvers import reverse
-  from forms import PresenceForm
+  from .forms import PresenceForm
   form = PresenceForm()
   if nick is not None:
     form.initial['nick'] = nick

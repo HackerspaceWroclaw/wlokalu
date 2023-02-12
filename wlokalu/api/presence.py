@@ -3,7 +3,7 @@
 from wlokalu.logging import getLogger, message
 logger = getLogger('wlokalu.presence')
 
-from models import Person, SimpleSensor, ComplexSensor
+from .models import Person, SimpleSensor, ComplexSensor
 import datetime
 
 #-----------------------------------------------------------------------------

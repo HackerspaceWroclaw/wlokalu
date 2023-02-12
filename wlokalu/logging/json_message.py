@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import ordereddict
+from . import ordereddict
 import json
 
 #-----------------------------------------------------------------------------
@@ -20,7 +20,7 @@ def message(*args, **kwargs):
     args[0] = ('message', args[0])
 
   msg = Message(args)
-  keys = kwargs.keys()
+  keys = list(kwargs.keys())
   keys.sort()
   for k in keys:
     msg[k] = kwargs[k]

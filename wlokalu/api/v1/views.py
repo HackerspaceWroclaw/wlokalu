@@ -17,7 +17,7 @@ logger = getLogger(__name__)
 def return_json(function):
   def replacement(*args, **kwargs):
     reply = function(*args, **kwargs)
-    if type(reply) in (dict, list, str, unicode):
+    if type(reply) in (dict, list, str, str):
       return HttpResponse(json.dumps(reply) + "\n", content_type = "text/json")
     return reply
 
@@ -74,7 +74,7 @@ def sensor(request, sensor_id):
       else: # Django <1.4
         payload = json.loads(request.raw_post_data)
       sensor_state = payload['state']
-    except Exception, e:
+    except Exception as e:
       logger.warn(log('bad request', exception = str(e), **context))
       return HttpResponse(status = 400) # bad request
     presence.sensor_state(sensor_id, sensor_state, context)
