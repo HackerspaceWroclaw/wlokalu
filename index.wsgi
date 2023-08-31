@@ -7,7 +7,10 @@ _path = os.path.dirname(__file__)
 if _path not in sys.path:
   sys.path.append(_path)
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'wlokalu.settings'
+os.environ.setdefault['DJANGO_SETTINGS_MODULE'] = 'wlokalu.settings'
 
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+import django
+django.setup()
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
