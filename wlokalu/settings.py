@@ -89,31 +89,17 @@ MESSAGE_TAGS = {
 # Make this unique, and don't share it with anybody.
 #SECRET_KEY = '!727cf)#x@==2=9zanp#*9$lw@y=*qillclgj55o#-^wso71k5'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-  'django.template.loaders.filesystem.Loader',
-  'django.template.loaders.app_directories.Loader',
-#   'django.template.loaders.eggs.Loader',
-)
-
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
   'django.middleware.common.CommonMiddleware',
   'django.contrib.sessions.middleware.SessionMiddleware',
   'django.middleware.csrf.CsrfViewMiddleware',
   'django.contrib.auth.middleware.AuthenticationMiddleware',
   'django.contrib.messages.middleware.MessageMiddleware',
-)
+]
 
 ROOT_URLCONF = 'wlokalu.urls'
 
-TEMPLATE_DIRS = (
-  # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-  # Always use forward slashes, even on Windows.
-  # Don't forget to use absolute paths, not relative paths.
-  '%s/templates' % (WLOKALU_ROOT_DIR),
-)
-
-INSTALLED_APPS = (
+INSTALLED_APPS = [
   'django.contrib.auth',
   'django.contrib.contenttypes',
   'django.contrib.sessions',
@@ -125,13 +111,29 @@ INSTALLED_APPS = (
   # 'django.contrib.admindocs',
   'wlokalu',
   'wlokalu.api',
-)
+]
 
 LOGIN_URL = '/login'
-TEMPLATE_CONTEXT_PROCESSORS = (
-  'django.contrib.auth.context_processors.auth',
-  'django.core.context_processors.request', # enable `request' in templates
-)
+TEMPLATES = [
+  {
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [ '%s/templates' % (WLOKALU_ROOT_DIR) ],
+    'LOADERS': [
+      'django.template.loaders.filesystem.Loader',
+      'django.template.loaders.app_directories.Loader',
+#     'django.template.loaders.eggs.Loader',
+     ],
+    'APP_DIRS': True,
+    'OPTIONS': {
+      'context_processors': [
+        'django.template.context_processors.debug',
+        'django.template.context_processors.request',
+#        'django.contrib.auth.context_processors.auth',
+#        'django.contrib.messages.context_processors.messages',
+      ],
+    },
+  },
+]
 
 try:
   from settings_local import *
